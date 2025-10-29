@@ -72,7 +72,7 @@ export async function scheduleMaintenanceReminder(
     await Notifications.scheduleNotificationAsync({
       content: {
         title: "🔧 Manutenção Necessária",
-        body: `${modelName} (${plate}) precisa de manutenção em breve. Faltam ${remainingKm} km.`,
+        body: `${modelName} (${plate}) precisa de manuten��ão em breve. Faltam ${remainingKm} km.`,
         data: { type: "maintenance", motorcycleId },
         sound: true,
         priority: Notifications.AndroidNotificationPriority.HIGH,

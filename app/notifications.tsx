@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar"
 import { Ionicons } from "@expo/vector-icons"
 import { router } from "expo-router"
 import { useTheme } from "../src/context/theme-context"
+import { useLanguage } from "../src/context/language-context"
 import { useNotifications } from "../src/context/notifications-context"
 import { useMotorcycles } from "../src/context/motorcycle-context"
 import { useState, useEffect } from "react"
@@ -20,6 +21,7 @@ const moderateScale = (size: number, factor = 0.5) => size + (scale(size) - size
 
 export default function NotificationsScreen() {
   const { theme } = useTheme()
+  const { t } = useLanguage()
   const { notificationsEnabled, enableNotifications, disableNotifications, expoPushToken } = useNotifications()
   const { motorcycles } = useMotorcycles()
   const [dailySummaryEnabled, setDailySummaryEnabled] = useState(false)
@@ -57,15 +59,15 @@ export default function NotificationsScreen() {
   const sendTestNotification = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "🧪 Notificação de Teste",
-        body: "Este é um teste do sistema de notificações do Moto Manager!",
+        title: t.notifications.testNotificationTitle,
+        body: t.notifications.testNotificationBody,
         data: { type: "test" },
         sound: true,
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
         seconds: 2,
-        repeats: false, 
+        repeats: false,
       },
     })
   }
@@ -254,21 +256,19 @@ export default function NotificationsScreen() {
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={isTablet ? 28 : 24} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text style={styles.title}>Notificações</Text>
+          <Text style={styles.title}>{t.notifications.title}</Text>
         </View>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Configurações</Text>
+          <Text style={styles.sectionTitle}>{t.notifications.settingsSection}</Text>
 
           <View style={styles.card}>
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Ativar Notificações</Text>
-                <Text style={styles.settingDescription}>
-                  Receba alertas sobre novas motos, mudanças de status e lembretes de manutenção
-                </Text>
+                <Text style={styles.settingTitle}>{t.notifications.enableNotifications}</Text>
+                <Text style={styles.settingDescription}>{t.notifications.enableNotificationsDesc}</Text>
               </View>
               <Switch
                 value={notificationsEnabled}
@@ -280,8 +280,8 @@ export default function NotificationsScreen() {
 
             <View style={styles.settingRow}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>Resumo Diário</Text>
-                <Text style={styles.settingDescription}>Receba um resumo diário às 9h com estatísticas das motos</Text>
+                <Text style={styles.settingTitle}>{t.notifications.dailySummary}</Text>
+                <Text style={styles.settingDescription}>{t.notifications.dailySummaryDesc}</Text>
               </View>
               <Switch
                 value={dailySummaryEnabled}
@@ -299,46 +299,43 @@ export default function NotificationsScreen() {
               size={isTablet ? 28 : 24}
               color={theme === "dark" ? "#BFDBFE" : "#1E3A8A"}
             />
-            <Text style={styles.infoText}>
-              As notificações são enviadas automaticamente quando você cadastra uma nova moto, altera o status ou quando
-              a manutenção está próxima.
-            </Text>
+            <Text style={styles.infoText}>{t.notifications.infoMessage}</Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Estatísticas</Text>
+          <Text style={styles.sectionTitle}>{t.notifications.statisticsSection}</Text>
 
           <View style={styles.statsCard}>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{scheduledCount}</Text>
-              <Text style={styles.statLabel}>Agendadas</Text>
+              <Text style={styles.statLabel}>{t.notifications.scheduled}</Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{motorcycles.length}</Text>
-              <Text style={styles.statLabel}>Motos</Text>
+              <Text style={styles.statLabel}>{t.notifications.motorcycles}</Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{motorcycles.filter((m) => m.status === "Manutenção").length}</Text>
-              <Text style={styles.statLabel}>Manutenção</Text>
+              <Text style={styles.statLabel}>{t.notifications.maintenance}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Teste</Text>
+          <Text style={styles.sectionTitle}>{t.notifications.testSection}</Text>
 
           <TouchableOpacity style={styles.testButton} onPress={sendTestNotification} disabled={!notificationsEnabled}>
             <Ionicons name="notifications" size={isTablet ? 24 : 20} color="#FFFFFF" />
-            <Text style={styles.testButtonText}>Enviar Notificação de Teste</Text>
+            <Text style={styles.testButtonText}>{t.notifications.sendTestNotification}</Text>
           </TouchableOpacity>
         </View>
 
         {expoPushToken && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Token de Push</Text>
+            <Text style={styles.sectionTitle}>{t.notifications.pushTokenSection}</Text>
             <View style={styles.tokenCard}>
-              <Text style={styles.tokenLabel}>EXPO PUSH TOKEN</Text>
+              <Text style={styles.tokenLabel}>{t.notifications.expoPushToken}</Text>
               <Text style={styles.tokenText} numberOfLines={3}>
                 {expoPushToken}
               </Text>

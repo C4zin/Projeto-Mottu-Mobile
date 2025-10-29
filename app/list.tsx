@@ -7,10 +7,12 @@ import { router } from "expo-router"
 
 import { useMotorcycles } from "../src/context/motorcycle-context"
 import { useTheme } from "../src/context/theme-context"
+import { useLanguage } from "../src/context/language-context"
 
 export default function YardMapScreen() {
-  const { motorcycles, loadMotorcycles } = useMotorcycles()
+  const { motorcycles, refetch } = useMotorcycles()
   const { theme } = useTheme()
+  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
@@ -29,7 +31,7 @@ export default function YardMapScreen() {
   const onRefresh = async () => {
     setRefreshing(true)
     try {
-      await loadMotorcycles()
+      await refetch()
     } finally {
       setRefreshing(false)
     }
@@ -208,13 +210,13 @@ export default function YardMapScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Lista de Motos</Text>
+        <Text style={styles.title}>{t.list.title}</Text>
 
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#FFFFFF" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Buscar por modelo, placa ou filial..."
+            placeholder={t.list.searchPlaceholder}
             placeholderTextColor="rgba(255, 255, 255, 0.6)"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -326,7 +328,7 @@ export default function YardMapScreen() {
             <Text style={styles.emptyStateText}>
               {searchQuery || selectedStatus
                 ? "Nenhuma moto encontrada com os filtros aplicados."
-                : "Nenhuma moto cadastrada."}
+                : t.list.noMotorcycles}
             </Text>
           </View>
         )}

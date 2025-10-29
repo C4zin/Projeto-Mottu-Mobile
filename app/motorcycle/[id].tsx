@@ -3,17 +3,18 @@
 import { useEffect, useState } from "react"
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { router, useLocalSearchParams } from "expo-router" // ✅ expo-router
+import { router, useLocalSearchParams } from "expo-router"
 
 import { useMotorcycles } from "../../src/context/motorcycle-context"
 import { useTheme } from "../../src/context/theme-context"
-import type { Motorcycle, MotorcycleStatus } from "../../src/types/index" // ajuste se seu arquivo de types estiver noutro lugar
-import { api } from "../../src/services/api" // idem
+import { useLanguage } from "../../src/context/language-context"
+import type { Motorcycle, MotorcycleStatus } from "../../src/types"
 
 export default function MotorcycleDetailsScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>() // ✅ pega o param da URL
-  const { motorcycles, updateMotorcycle } = useMotorcycles()
+  const { id } = useLocalSearchParams<{ id: string }>()
+  const { motorcycles, updateMotorcycle, deleteMotorcycle } = useMotorcycles()
   const { theme } = useTheme()
+  const { t } = useLanguage()
   const [motorcycle, setMotorcycle] = useState<Motorcycle | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -145,9 +146,9 @@ export default function MotorcycleDetailsScreen() {
       const updated = { ...motorcycle, status: newStatus }
       await updateMotorcycle(updated)
       setMotorcycle(updated)
-      Alert.alert("Sucesso", "Status atualizado com sucesso!")
+      Alert.alert(t.common.success, t.detail.statusUpdateSuccess)
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível atualizar o status. Tente novamente.")
+      Alert.alert(t.common.error, t.detail.statusUpdateError)
       console.error("[Error updating status]:", error)
     } finally {
       setIsUpdating(false)
@@ -155,28 +156,24 @@ export default function MotorcycleDetailsScreen() {
   }
 
   const handleDelete = () => {
-    const motoId = (motorcycle as any)?.idMoto ?? id
-    if (!motoId) return
+    if (!motorcycle) return
 
-    Alert.alert("Confirmar Exclusão", "Tem certeza que deseja excluir esta moto? Esta ação não pode ser desfeita.", [
-      { text: "Cancelar", style: "cancel" },
+    Alert.alert(t.detail.confirmDelete, t.detail.deleteMessage, [
+      { text: t.detail.cancel, style: "cancel" },
       {
-        text: "Excluir",
+        text: t.detail.delete,
         style: "destructive",
         onPress: async () => {
           try {
             setIsUpdating(true)
-            const res = await api.delete(`/api/motos/${motoId}`)
-            if (res.status === 200 || res.status === 204) {
-              Alert.alert("Sucesso", "Moto excluída com sucesso!")
-              router.replace("/") // ✅ volta para Home
-            } else {
-              Alert.alert("Erro", `Falha ao excluir (código ${res.status}).`)
-            }
+            console.log("[v0] Deleting motorcycle with ID:", motorcycle.id)
+            await deleteMotorcycle(motorcycle.id)
+            Alert.alert(t.common.success, t.detail.deleteSuccess)
+            router.replace("/")
           } catch (error: any) {
-            console.error("[DELETE /motos]", error?.response?.data || error?.message)
-            const msg = error?.response?.data?.message || "Não foi possível excluir a moto."
-            Alert.alert("Erro", msg)
+            console.error("[DELETE /api/motos] erro:", error?.response?.data || error?.message)
+            const msg = error?.response?.data?.message || t.detail.deleteError
+            Alert.alert(t.common.error, msg)
           } finally {
             setIsUpdating(false)
           }
@@ -188,7 +185,7 @@ export default function MotorcycleDetailsScreen() {
   if (!motorcycle) {
     return (
       <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
-        <Text style={{ color: theme === "dark" ? "#ffffff" : "#000000" }}>Moto não encontrada</Text>
+        <Text style={{ color: theme === "dark" ? "#ffffff" : "#000000" }}>{t.detail.notFound}</Text>
       </View>
     )
   }
@@ -228,64 +225,66 @@ export default function MotorcycleDetailsScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.headerCard}>
           <Text style={styles.modelName}>{motorcycle.modelName}</Text>
-          <Text style={styles.plate}>Placa: {motorcycle.plate}</Text>
+          <Text style={styles.plate}>
+            {t.detail.plateLabel} {motorcycle.plate}
+          </Text>
           <View style={[styles.statusBadge, { backgroundColor: getStatusColor(motorcycle.status) }]}>
             <Text style={styles.statusText}>{motorcycle.status}</Text>
           </View>
         </View>
 
         <View style={styles.infoCard}>
-          <Text style={styles.sectionTitle}>Informações Principais</Text>
+          <Text style={styles.sectionTitle}>{t.detail.mainInfo}</Text>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Modelo</Text>
+            <Text style={styles.infoLabel}>{t.detail.model}</Text>
             <Text style={styles.infoValue}>{motorcycle.modelName}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Filial</Text>
+            <Text style={styles.infoLabel}>{t.detail.branchLabel}</Text>
             <Text style={styles.infoValue}>{motorcycle.branchName}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Quilometragem</Text>
+            <Text style={styles.infoLabel}>{t.detail.mileage}</Text>
             <Text style={styles.mileageValue}>{formatMileage(motorcycle.mileage)} km</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Posição no Pátio</Text>
+            <Text style={styles.infoLabel}>{t.detail.position}</Text>
             <Text style={styles.infoValue}>{`${motorcycle.position.row}-${motorcycle.position.spot}`}</Text>
           </View>
 
           {motorcycle.year && (
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Ano</Text>
+              <Text style={styles.infoLabel}>{t.detail.year}</Text>
               <Text style={styles.infoValue}>{motorcycle.year}</Text>
             </View>
           )}
 
           {motorcycle.color && (
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Cor</Text>
+              <Text style={styles.infoLabel}>{t.detail.color}</Text>
               <Text style={styles.infoValue}>{motorcycle.color}</Text>
             </View>
           )}
 
           <View style={[styles.infoRow, styles.lastRow]}>
-            <Text style={styles.infoLabel}>Cadastrada em</Text>
+            <Text style={styles.infoLabel}>{t.detail.createdAt}</Text>
             <Text style={styles.infoValue}>{formatDate(motorcycle.createdAt)}</Text>
           </View>
 
           {motorcycle.notes && (
             <View style={styles.notesContainer}>
-              <Text style={styles.sectionTitle}>Observações</Text>
+              <Text style={styles.sectionTitle}>{t.detail.notes}</Text>
               <Text style={styles.notesText}>{motorcycle.notes}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.actionsContainer}>
-          <Text style={styles.sectionTitle}>Alterar Status</Text>
+          <Text style={styles.sectionTitle}>{t.detail.changeStatus}</Text>
 
           <TouchableOpacity
             style={[styles.actionButton, { backgroundColor: "#10B981" }]}
@@ -297,7 +296,7 @@ export default function MotorcycleDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
-                <Text style={styles.actionButtonText}>Marcar como Disponível</Text>
+                <Text style={styles.actionButtonText}>{t.detail.markAsAvailable}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -312,7 +311,7 @@ export default function MotorcycleDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="bicycle" size={20} color="#FFFFFF" />
-                <Text style={styles.actionButtonText}>Marcar como Em Uso</Text>
+                <Text style={styles.actionButtonText}>{t.detail.markAsInUse}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -327,7 +326,7 @@ export default function MotorcycleDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="construct" size={20} color="#FFFFFF" />
-                <Text style={styles.actionButtonText}>Marcar como Em Manutenção</Text>
+                <Text style={styles.actionButtonText}>{t.detail.markAsMaintenance}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -342,7 +341,7 @@ export default function MotorcycleDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="time" size={20} color="#FFFFFF" />
-                <Text style={styles.actionButtonText}>Marcar como Reservada</Text>
+                <Text style={styles.actionButtonText}>{t.detail.markAsReserved}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -350,7 +349,7 @@ export default function MotorcycleDetailsScreen() {
 
         <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} disabled={isUpdating}>
           <Ionicons name="trash" size={20} color="#FFFFFF" />
-          <Text style={styles.deleteButtonText}>{isUpdating ? "Excluindo..." : "Excluir Moto"}</Text>
+          <Text style={styles.deleteButtonText}>{isUpdating ? t.detail.deleting : t.detail.deleteButton}</Text>
         </TouchableOpacity>
 
         <View style={{ height: 40 }} />

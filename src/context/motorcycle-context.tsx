@@ -1,30 +1,37 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { createContext, useContext, useState, type ReactNode } from "react"
 import type { Motorcycle, Model, Branch } from "../types"
 import { notifyNewMotorcycle, notifyStatusChange, scheduleMaintenanceReminder } from "../lib/notifications"
+import {
+  useMotorcyclesQuery,
+  useCreateMotorcycleMutation,
+  useUpdateMotorcycleMutation,
+  useDeleteMotorcycleMutation,
+} from "../hooks/use-motorcycle-query"
 
 interface MotorcycleContextType {
   motorcycles: Motorcycle[]
   models: Model[]
   branches: Branch[]
-  loadMotorcycles: () => Promise<void>
+  isLoading: boolean
+  error: Error | null
   addMotorcycle: (motorcycle: Motorcycle) => Promise<void>
   updateMotorcycle: (updatedMotorcycle: Motorcycle) => Promise<void>
   deleteMotorcycle: (id: string) => Promise<void>
-  clearAllMotorcycles: () => Promise<void>
+  refetch: () => Promise<void>
 }
 
 const MotorcycleContext = createContext<MotorcycleContextType>({
   motorcycles: [],
   models: [],
   branches: [],
-  loadMotorcycles: async () => {},
+  isLoading: false,
+  error: null,
   addMotorcycle: async () => {},
   updateMotorcycle: async () => {},
   deleteMotorcycle: async () => {},
-  clearAllMotorcycles: async () => {},
+  refetch: async () => {},
 })
 
 interface MotorcycleProviderProps {
@@ -32,7 +39,6 @@ interface MotorcycleProviderProps {
 }
 
 export function MotorcycleProvider({ children }: MotorcycleProviderProps) {
-  const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([])
   const [models] = useState<Model[]>([
     { id: 1, name: "Honda CG 160" },
     { id: 2, name: "Yamaha Factor 150" },
@@ -44,81 +50,67 @@ export function MotorcycleProvider({ children }: MotorcycleProviderProps) {
     { id: 3, name: "Filial Sul" },
   ])
 
-  useEffect(() => {
-    loadMotorcycles()
-  }, [])
-
-  useEffect(() => {
-    saveMotorcycles()
-  }, [motorcycles])
-
-  const loadMotorcycles = async (): Promise<void> => {
-    try {
-      const storedMotorcycles = await AsyncStorage.getItem("motorcycles")
-      if (storedMotorcycles) {
-        setMotorcycles(JSON.parse(storedMotorcycles))
-      }
-    } catch (error) {
-      console.error("Error loading motorcycles:", error)
-    }
-  }
-
-  const saveMotorcycles = async (): Promise<void> => {
-    try {
-      await AsyncStorage.setItem("motorcycles", JSON.stringify(motorcycles))
-    } catch (error) {
-      console.error("Error saving motorcycles:", error)
-    }
-  }
+  const { data: motorcycles = [], isLoading, error, refetch } = useMotorcyclesQuery(models, branches)
+  const createMutation = useCreateMotorcycleMutation()
+  const updateMutation = useUpdateMotorcycleMutation()
+  const deleteMutation = useDeleteMotorcycleMutation()
 
   const addMotorcycle = async (motorcycle: Motorcycle): Promise<void> => {
-    setMotorcycles((prev) => [...prev, motorcycle])
+    try {
+      await createMutation.mutateAsync(motorcycle)
 
-    // Send notification for new motorcycle
-    await notifyNewMotorcycle(motorcycle.modelName, motorcycle.plate, motorcycle.id)
+      // Send notification for new motorcycle
+      await notifyNewMotorcycle(motorcycle.modelName, motorcycle.plate, motorcycle.id)
 
-    // Check if maintenance reminder is needed
-    await scheduleMaintenanceReminder(motorcycle.id, motorcycle.modelName, motorcycle.plate, motorcycle.mileage)
+      // Check if maintenance reminder is needed
+      await scheduleMaintenanceReminder(motorcycle.id, motorcycle.modelName, motorcycle.plate, motorcycle.mileage)
+    } catch (error) {
+      console.error("Error adding motorcycle:", error)
+      throw error
+    }
   }
 
   const updateMotorcycle = async (updatedMotorcycle: Motorcycle): Promise<void> => {
-    const oldMotorcycle = motorcycles.find((m) => m.id === updatedMotorcycle.id)
+    try {
+      const oldMotorcycle = motorcycles.find((m) => m.id === updatedMotorcycle.id)
 
-    setMotorcycles((prev) =>
-      prev.map((motorcycle) => (motorcycle.id === updatedMotorcycle.id ? updatedMotorcycle : motorcycle)),
-    )
+      await updateMutation.mutateAsync(updatedMotorcycle)
 
-    // Send notification if status changed
-    if (oldMotorcycle && oldMotorcycle.status !== updatedMotorcycle.status) {
-      await notifyStatusChange(
+      // Send notification if status changed
+      if (oldMotorcycle && oldMotorcycle.status !== updatedMotorcycle.status) {
+        await notifyStatusChange(
+          updatedMotorcycle.modelName,
+          updatedMotorcycle.plate,
+          oldMotorcycle.status,
+          updatedMotorcycle.status,
+          updatedMotorcycle.id,
+        )
+      }
+
+      // Check if maintenance reminder is needed
+      await scheduleMaintenanceReminder(
+        updatedMotorcycle.id,
         updatedMotorcycle.modelName,
         updatedMotorcycle.plate,
-        oldMotorcycle.status,
-        updatedMotorcycle.status,
-        updatedMotorcycle.id,
+        updatedMotorcycle.mileage,
       )
+    } catch (error) {
+      console.error("Error updating motorcycle:", error)
+      throw error
     }
-
-    // Check if maintenance reminder is needed
-    await scheduleMaintenanceReminder(
-      updatedMotorcycle.id,
-      updatedMotorcycle.modelName,
-      updatedMotorcycle.plate,
-      updatedMotorcycle.mileage,
-    )
   }
 
   const deleteMotorcycle = async (id: string): Promise<void> => {
-    setMotorcycles((prev) => prev.filter((motorcycle) => motorcycle.id !== id))
+    try {
+      await deleteMutation.mutateAsync(Number(id))
+    } catch (error) {
+      console.error("Error deleting motorcycle:", error)
+      throw error
+    }
   }
 
-  const clearAllMotorcycles = async (): Promise<void> => {
-    try {
-      await AsyncStorage.removeItem("motorcycles")
-      setMotorcycles([])
-    } catch (error) {
-      console.error("Error clearing motorcycles:", error)
-    }
+  const handleRefetch = async (): Promise<void> => {
+    await refetch()
   }
 
   return (
@@ -127,11 +119,12 @@ export function MotorcycleProvider({ children }: MotorcycleProviderProps) {
         motorcycles,
         models,
         branches,
-        loadMotorcycles,
+        isLoading,
+        error: error as Error | null,
         addMotorcycle,
         updateMotorcycle,
         deleteMotorcycle,
-        clearAllMotorcycles,
+        refetch: handleRefetch,
       }}
     >
       {children}

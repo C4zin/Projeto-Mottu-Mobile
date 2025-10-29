@@ -8,17 +8,19 @@ import { router } from "expo-router"
 import { useMotorcycles } from "../src/context/motorcycle-context"
 import { useTheme } from "../src/context/theme-context"
 import { useNotifications } from "../src/context/notifications-context"
+import { useLanguage } from "../src/context/language-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function HomeScreen() {
-  const { motorcycles, loadMotorcycles } = useMotorcycles()
+  const { motorcycles, refetch, isLoading } = useMotorcycles()
   const { theme } = useTheme()
   const { notificationsEnabled } = useNotifications()
+  const { t } = useLanguage()
   const [lastVisit, setLastVisit] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
-    loadMotorcycles()
+    refetch()
 
     const saveVisit = async () => {
       const now = new Date().toLocaleString()
@@ -38,7 +40,7 @@ export default function HomeScreen() {
   const onRefresh = async () => {
     setRefreshing(true)
     try {
-      await loadMotorcycles()
+      await refetch()
     } finally {
       setRefreshing(false)
     }
@@ -293,7 +295,7 @@ export default function HomeScreen() {
 
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <Text style={styles.title}>Moto Manager</Text>
+          <Text style={styles.title}>{t.home.title}</Text>
           <View style={styles.headerButtons}>
             <TouchableOpacity style={styles.notificationButton} onPress={() => router.push("/notifications")}>
               <Ionicons name="notifications" size={24} color="#FFFFFF" />
@@ -305,12 +307,16 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {lastVisit && <Text style={styles.lastVisit}>Último acesso: {lastVisit}</Text>}
+        {lastVisit && (
+          <Text style={styles.lastVisit}>
+            {t.home.lastAccess} {lastVisit}
+          </Text>
+        )}
 
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
             <Text style={styles.statValue}>{motorcycles.length}</Text>
-            <Text style={styles.statTitle}>Total</Text>
+            <Text style={styles.statTitle}>{t.home.total}</Text>
           </View>
 
           <View style={styles.statCard}>
@@ -318,7 +324,7 @@ export default function HomeScreen() {
               <Ionicons name="checkmark-circle" size={24} color="#10B981" />
             </View>
             <Text style={styles.statValue}>{motorcycles.filter((m) => m.status === "Disponível").length}</Text>
-            <Text style={styles.statTitle}>Disponíveis</Text>
+            <Text style={styles.statTitle}>{t.home.available}</Text>
           </View>
 
           <View style={styles.statCard}>
@@ -326,7 +332,7 @@ export default function HomeScreen() {
               <Ionicons name="construct" size={24} color="#DC2626" />
             </View>
             <Text style={styles.statValue}>{motorcycles.filter((m) => m.status === "Manutenção").length}</Text>
-            <Text style={styles.statTitle}>Manutenção</Text>
+            <Text style={styles.statTitle}>{t.home.maintenance}</Text>
           </View>
         </View>
       </View>
@@ -344,21 +350,21 @@ export default function HomeScreen() {
             onPress={() => router.push("/motorcycle/register")}
           >
             <Ionicons name="add-circle" size={20} color="#FFFFFF" />
-            <Text style={styles.actionButtonText}>Cadastrar</Text>
+            <Text style={styles.actionButtonText}>{t.home.addMotorcycle}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.actionButton, styles.secondaryButton]} onPress={() => router.push("/list")}>
             <Ionicons name="list" size={20} color="#FFFFFF" />
-            <Text style={styles.actionButtonText}>Lista de Motos</Text>
+            <Text style={styles.actionButtonText}>{t.home.myMotorcycles}</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={[styles.actionButton, styles.iotButton]} onPress={openIoTSystem}>
           <Ionicons name="hardware-chip" size={20} color="#FFFFFF" />
-          <Text style={styles.actionButtonText}>Sistema IoT</Text>
+          <Text style={styles.actionButtonText}>{t.home.iotSystem}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.sectionTitle}>Motos Recentes</Text>
+        <Text style={styles.sectionTitle}>{t.home.recentMotorcycles}</Text>
 
         {motorcycles.length > 0 ? (
           motorcycles.slice(0, 5).map((motorcycle) => (
@@ -370,8 +376,14 @@ export default function HomeScreen() {
               <View style={styles.cardHeader}>
                 <View style={styles.cardInfo}>
                   <Text style={styles.cardTitle}>{motorcycle.modelName}</Text>
-                  <Text style={styles.cardSubtitle}>Placa: {motorcycle.plate}</Text>
-                  {motorcycle.year && <Text style={styles.cardSubtitle}>Ano: {motorcycle.year}</Text>}
+                  <Text style={styles.cardSubtitle}>
+                    {t.detail.plateLabel} {motorcycle.plate}
+                  </Text>
+                  {motorcycle.year && (
+                    <Text style={styles.cardSubtitle}>
+                      {t.detail.year}: {motorcycle.year}
+                    </Text>
+                  )}
                 </View>
                 <View style={[styles.statusBadge, { backgroundColor: getStatusColor(motorcycle.status) }]}>
                   <Text style={styles.statusText}>{motorcycle.status}</Text>
@@ -380,7 +392,7 @@ export default function HomeScreen() {
 
               <View style={styles.cardFooter}>
                 <Text style={styles.positionText}>
-                  Posição: {motorcycle.position.row}-{motorcycle.position.spot}
+                  {t.detail.position}: {motorcycle.position.row}-{motorcycle.position.spot}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} style={styles.chevronIcon} />
               </View>
@@ -389,7 +401,9 @@ export default function HomeScreen() {
         ) : (
           <View style={styles.emptyState}>
             <Text style={styles.emptyStateText}>
-              Nenhuma moto cadastrada.{"\n"}Clique em "Cadastrar" para adicionar sua primeira moto.
+              {t.home.noMotorcycles}
+              {"\n"}
+              {t.home.addFirstMotorcycle}
             </Text>
           </View>
         )}

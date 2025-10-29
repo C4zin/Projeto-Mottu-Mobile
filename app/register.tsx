@@ -14,10 +14,11 @@ import {
   ScrollView,
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { router } from "expo-router" 
+import { router } from "expo-router"
 
 import { useTheme } from "../src/context/theme-context"
 import { useAuth } from "../src/context/auth-context"
+import { useLanguage } from "../src/context/language-context"
 
 interface FormErrors {
   email?: string
@@ -28,6 +29,7 @@ interface FormErrors {
 export default function RegisterScreen() {
   const { theme } = useTheme()
   const { register, isLoading } = useAuth()
+  const { t } = useLanguage()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -41,23 +43,23 @@ export default function RegisterScreen() {
     const newErrors: FormErrors = {}
 
     if (!email.trim()) {
-      newErrors.email = "Email é obrigatório"
+      newErrors.email = t.register.errors.emailRequired
       isValid = false
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email inválido"
+      newErrors.email = t.register.errors.emailInvalid
       isValid = false
     }
 
     if (!password) {
-      newErrors.password = "Senha é obrigatória"
+      newErrors.password = t.register.errors.passwordRequired
       isValid = false
     } else if (password.length < 6) {
-      newErrors.password = "A senha deve ter pelo menos 6 caracteres"
+      newErrors.password = t.register.errors.passwordMin
       isValid = false
     }
 
     if (password !== confirmPassword) {
-      newErrors.confirmPassword = "As senhas não coincidem"
+      newErrors.confirmPassword = t.register.errors.passwordMismatch
       isValid = false
     }
 
@@ -71,11 +73,10 @@ export default function RegisterScreen() {
     const result = await register(email, password)
 
     if (result.success) {
-      Alert.alert("Sucesso!", "Conta criada com sucesso! Você já está logado.")
-
+      Alert.alert(t.common.success, "Conta criada com sucesso! Você já está logado.")
       router.replace("/")
     } else {
-      Alert.alert("Erro no Cadastro", result.error || "Erro desconhecido")
+      Alert.alert(t.register.errors.registerFailed, result.error || t.login.errors.unknownError)
     }
   }
 
@@ -211,8 +212,8 @@ export default function RegisterScreen() {
           <View style={styles.headerIcon}>
             <Ionicons name="person-add" size={40} color="#1E3A8A" />
           </View>
-          <Text style={styles.title}>Criar Conta</Text>
-          <Text style={styles.subtitle}>Cadastre-se para gerenciar suas motocicletas</Text>
+          <Text style={styles.title}>{t.register.title}</Text>
+          <Text style={styles.subtitle}>{t.register.subtitle}</Text>
         </View>
 
         <View style={styles.registerCard}>
@@ -223,12 +224,12 @@ export default function RegisterScreen() {
           )}
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>{t.register.email}</Text>
             <View style={[styles.inputContainer, errors.email && styles.inputError]}>
               <Ionicons name="mail" size={20} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="seu@email.com"
+                placeholder={t.register.emailPlaceholder}
                 placeholderTextColor="#94A3B8"
                 value={email}
                 onChangeText={setEmail}
@@ -242,12 +243,12 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Senha</Text>
+            <Text style={styles.label}>{t.register.password}</Text>
             <View style={[styles.inputContainer, errors.password && styles.inputError]}>
               <Ionicons name="lock-closed" size={20} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="Crie uma senha (mín. 6 caracteres)"
+                placeholder={t.register.passwordPlaceholder}
                 placeholderTextColor="#94A3B8"
                 value={password}
                 onChangeText={setPassword}
@@ -267,12 +268,12 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>Confirmar Senha</Text>
+            <Text style={styles.label}>{t.register.confirmPassword}</Text>
             <View style={[styles.inputContainer, errors.confirmPassword && styles.inputError]}>
               <Ionicons name="shield-checkmark" size={20} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="Confirme sua senha"
+                placeholder={t.register.confirmPasswordPlaceholder}
                 placeholderTextColor="#94A3B8"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
@@ -298,13 +299,13 @@ export default function RegisterScreen() {
             activeOpacity={0.8}
           >
             {isLoading && <ActivityIndicator color="#FFFFFF" />}
-            <Text style={styles.buttonText}>{isLoading ? "Criando conta..." : "Cadastrar"}</Text>
+            <Text style={styles.buttonText}>{isLoading ? t.register.registering : t.register.registerButton}</Text>
           </TouchableOpacity>
 
           <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Já tem uma conta?</Text>
+            <Text style={styles.loginText}>{t.register.hasAccount}</Text>
             <TouchableOpacity onPress={() => router.push("/login")} disabled={isLoading}>
-              <Text style={styles.loginLink}>Faça login</Text>
+              <Text style={styles.loginLink}>{t.register.login}</Text>
             </TouchableOpacity>
           </View>
         </View>

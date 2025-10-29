@@ -19,7 +19,7 @@ interface AppInfo {
 
 export default function SettingsScreen() {
   const { theme, toggleTheme } = useTheme()
-  const { motorcycles, clearAllMotorcycles } = useMotorcycles()
+  const { motorcycles } = useMotorcycles()
   const { user, logout } = useAuth()
   const { language, setLanguage, t } = useLanguage()
 
@@ -56,20 +56,6 @@ export default function SettingsScreen() {
 
   const handleLanguageToggle = () => {
     setLanguage(language === "pt" ? "es" : "pt")
-  }
-
-  const handleClearData = () => {
-    Alert.alert(t.settings.clearDataConfirm, t.settings.clearDataMessage, [
-      { text: t.settings.cancel, style: "cancel" },
-      {
-        text: t.settings.clear,
-        onPress: () => {
-          clearAllMotorcycles()
-          Alert.alert(t.settings.clearSuccess, t.settings.clearSuccessMessage)
-        },
-        style: "destructive",
-      },
-    ])
   }
 
   const handleLogout = async () => {
@@ -291,10 +277,15 @@ export default function SettingsScreen() {
             <Ionicons name="home" size={20} color="#FFFFFF" />
             <Text style={styles.actionButtonText}>{t.settings.backToHome}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, styles.dangerButton]} onPress={handleClearData}>
-            <Ionicons name="trash" size={20} color="#FFFFFF" />
-            <Text style={styles.actionButtonText}>{t.settings.clearData}</Text>
+
+          <TouchableOpacity
+            style={[styles.actionButton, { backgroundColor: "#3B82F6" }]}
+            onPress={() => router.push("/about")}
+          >
+            <Ionicons name="information-circle" size={20} color="#FFFFFF" />
+            <Text style={styles.actionButtonText}>{t.settings.aboutApp || "Sobre o App"}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={[styles.actionButton, styles.logoutButton]} onPress={handleLogout}>
             <Ionicons name="log-out" size={20} color="#FFFFFF" />
             <Text style={styles.actionButtonText}>{t.settings.logout}</Text>

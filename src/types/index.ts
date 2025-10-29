@@ -5,7 +5,6 @@ export interface MotorcyclePosition {
   spot: string
 }
 
-
 export interface Model {
   id: number
   name: string
@@ -24,41 +23,36 @@ export interface Motorcycle {
   branchName: string
   plate: string
   status: MotorcycleStatus
-  mileage: number 
+  mileage: number
   position: MotorcyclePosition
-  notes: string
+  notes?: string
   createdAt: string
-  year?: string 
-  color?: string 
+  year?: string
+  color?: string
 }
 
-export interface MaintenanceRecord {
-  id: string
-  motorcycleId: string
-  entryDate: string
-  exitDate?: string
-  description: string
+export interface ApiMotorcycle {
+  id: number
+  idModelo: number
+  idFilial: number
+  placa: string
+  status: "DISPONIVEL" | "EM_USO" | "MANUTENCAO" | "RESERVADA"
+  kmRodado: number
 }
 
-export interface RentalRecord {
-  id: string
-  clientId: string
-  motorcycleId: string
-  pickupDate: string
-  returnDate?: string
+export interface ApiMotorcycleCreate {
+  idModelo: number
+  idFilial: number
+  placa: string
+  status: "DISPONIVEL" | "EM_USO" | "MANUTENCAO" | "RESERVADA"
+  kmRodado: number
 }
 
-export type RootStackParamList = {
-  Login: undefined
-  Register: undefined
-  Home: undefined
-  RegisterMoto: undefined
-  YardMap: undefined
-  MotorcycleDetails: { id: string }
-  Settings: undefined
-}
-
-export type AuthStackParamList = {
-  Login: undefined
-  RegisterUser: undefined
+export interface ApiMotorcycleUpdate {
+  id: number
+  idModelo: number
+  idFilial: number
+  placa: string
+  status: "DISPONIVEL" | "EM_USO" | "MANUTENCAO" | "RESERVADA"
+  kmRodado: number
 }
