@@ -1,37 +1,44 @@
 "use client";
 
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTheme } from "../src/context/theme-context";
 import { useLanguage } from "../src/context/language-context";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query"
 
-export default function AboutScreen() {
+export default function AboutAppScreen() {
   const { theme } = useTheme();
   const { t } = useLanguage();
 
-  // 🔹 Busca o commit mais recente com TanStack Query
-  const {
-    data,
-    isLoading,
-    isError,
-    refetch,
-    isFetching,
-  } = useQuery({
-    queryKey: ["githubCommit"],
-    queryFn: async () => {
-      const response = await axios.get(
-        "https://api.github.com/repos/felipecvo-fiap-mad/2tdspw-sprint-01-mototrack/commits"
-      );
-      const latest = response.data[0];
-      return {
-        hash: latest.sha.substring(0, 7),
-        date: new Date(latest.commit.committer.date).toISOString().split("T")[0],
-      };
-    },
-  });
+  const commits = [
+    { message: "Finalizando com Render", hash: "4278584", date: "2025-10-31" },
+    { message: "criando Sobre o App", hash: "4278584", date: "2025-10-30" },
+    { message: "api funcionando localmente ainda, e adicionando a pagina about", hash: "5b84d32", date: "2025-10-29" },
+    { message: "adicionando notificações", hash: "e4a68f7", date: "2025-10-29" },
+    { message: "reajustando todos os contexts e adicionando tradução em espanhol", hash: "bc454f0", date: "2025-10-29" },
+    { message: "atualizando dependencias e reajustando firebase", hash: "2fabe79", date: "2025-10-29" },
+    { message: "fazendo tudo relacionado a api’s", hash: "33c4681", date: "2025-10-29" },
+    { message: "modificando todas as telas para a sprint 4", hash: "44cbc85", date: "2025-10-29" },
+    { message: "adicionando todos os arquivos necessários", hash: "15974c1", date: "2025-10-29" },
+    { message: "redesenhando a estrutura do projeto", hash: "aa9f295", date: "2025-10-29" },
+    { message: "fazendo ajustes para começar a quarta sprint", hash: "27a226e", date: "2025-10-29" },
+    { message: "falta arrumar a api", hash: "a88d76b", date: "2025-10-01" },
+    { message: "configurando toda a api", hash: "8504d95", date: "2025-10-01" },
+    { message: "Merge branch 'main' ...", hash: "b48ffd4", date: "2025-10-01" },
+    { message: "adicionando e configurando api", hash: "05885e9", date: "2025-10-01" },
+    { message: "Update README.md", hash: "cb877ac", date: "2025-10-01" },
+    { message: "Retocando o README.md", hash: "de99486", date: "2025-09-30" },
+    { message: "Deu erro no ultimo entao aproveitei pra arrumar e atualizar o README.md", hash: "c798321", date: "2025-09-30" },
+    { message: "Ajustando css e melhorando as telas", hash: "3123847", date: "2025-09-30" },
+    { message: "Implementando a api de cadastro usando Firebase", hash: "8b27161", date: "2025-09-30" },
+    { message: "tela de login fim do projeto", hash: "2d6618e", date: "2025-05-19" },
+    { message: "projeto quase finalizado", hash: "ff994e1", date: "2025-05-18" },
+    { message: "projeto", hash: "183efa5", date: "2025-05-18" },
+    { message: "first commit", hash: "21df3a9", date: "2025-05-18" },
+    { message: "começando", hash: "93970a0", date: "2025-05-18" },
+  ];
+
+  const totalCommits = commits.length;
 
   const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: theme === "dark" ? "#0F172A" : "#F1F5F9" },
@@ -71,7 +78,6 @@ export default function AboutScreen() {
       backgroundColor: theme === "dark" ? "#1E293B" : "#FFFFFF",
       borderRadius: 20,
       padding: 24,
-      marginBottom: 20,
       shadowColor: "#065F46",
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.1,
@@ -89,65 +95,35 @@ export default function AboutScreen() {
       alignItems: "center",
       alignSelf: "center",
       marginBottom: 16,
-      shadowColor: "#10B981",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
-      elevation: 4,
     },
     appName: {
       fontSize: 24,
       fontWeight: "800",
       color: theme === "dark" ? "#FFFFFF" : "#065F46",
       textAlign: "center",
-      marginBottom: 8,
+      marginBottom: 4,
     },
-    appVersion: {
-      fontSize: 16,
-      color: theme === "dark" ? "#94A3B8" : "#64748B",
+    commitCount: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: theme === "dark" ? "#94A3B8" : "#047857",
       textAlign: "center",
-      marginBottom: 24,
+      marginBottom: 16,
     },
-    infoRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      paddingVertical: 12,
+    commitCard: {
       borderBottomWidth: 1,
       borderBottomColor: theme === "dark" ? "#334155" : "#E2E8F0",
+      paddingVertical: 12,
     },
-    infoLabel: {
-      fontSize: 14,
-      color: theme === "dark" ? "#94A3B8" : "#64748B",
-      fontWeight: "600",
-    },
-    infoValue: {
-      fontSize: 14,
+    commitMessage: {
+      fontSize: 15,
       fontWeight: "700",
-      color: theme === "dark" ? "#10B981" : "#065F46",
-      fontFamily: "monospace",
+      color: theme === "dark" ? "#FFFFFF" : "#065F46",
     },
-    lastRow: { borderBottomWidth: 0 },
-    loadingText: {
-      textAlign: "center",
+    commitDetails: {
+      fontSize: 13,
       color: theme === "dark" ? "#94A3B8" : "#64748B",
-      marginTop: 10,
-    },
-    errorText: {
-      textAlign: "center",
-      color: "#EF4444",
-      marginTop: 10,
-    },
-    refreshButton: {
-      marginTop: 16,
-      backgroundColor: theme === "dark" ? "#10B981" : "#065F46",
-      paddingVertical: 10,
-      borderRadius: 10,
-      alignItems: "center",
-    },
-    refreshText: {
-      color: "#FFFFFF",
-      fontWeight: "700",
+      marginTop: 4,
     },
   });
 
@@ -159,7 +135,7 @@ export default function AboutScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t.about.title}</Text>
+        <Text style={styles.headerTitle}>Sobre o App</Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -167,40 +143,17 @@ export default function AboutScreen() {
           <View style={styles.appIcon}>
             <Ionicons name="bicycle" size={40} color="#FFFFFF" />
           </View>
-          <Text style={styles.appName}>{t.about.appName}</Text>
-          <Text style={styles.appVersion}>{t.about.version} 1.0.0</Text>
+          <Text style={styles.appName}>MotoTrack</Text>
+          <Text style={styles.commitCount}>📦 {totalCommits} commits registrados</Text>
 
-          {isLoading ? (
-            <View>
-              <ActivityIndicator color="#10B981" />
-              <Text style={styles.loadingText}>Buscando commit...</Text>
+          {commits.map((commit, index) => (
+            <View key={index} style={styles.commitCard}>
+              <Text style={styles.commitMessage}>{commit.message}</Text>
+              <Text style={styles.commitDetails}>
+                Autor: C4zin | Hash: {commit.hash} | {commit.date}
+              </Text>
             </View>
-          ) : isError ? (
-            <Text style={styles.errorText}>Erro ao buscar commit 😞</Text>
-          ) : (
-            <>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>{t.about.commitHash}</Text>
-                <Text style={styles.infoValue}>{data?.hash}</Text>
-              </View>
-              <View style={[styles.infoRow, styles.lastRow]}>
-                <Text style={styles.infoLabel}>{t.about.buildDate}</Text>
-                <Text style={styles.infoValue}>{data?.date}</Text>
-              </View>
-
-              <TouchableOpacity
-                style={styles.refreshButton}
-                onPress={() => refetch()}
-                disabled={isFetching}
-              >
-                {isFetching ? (
-                  <ActivityIndicator color="#FFFFFF" />
-                ) : (
-                  <Text style={styles.refreshText}>🔄 Atualizar commit</Text>
-                )}
-              </TouchableOpacity>
-            </>
-          )}
+          ))}
         </View>
       </ScrollView>
     </View>

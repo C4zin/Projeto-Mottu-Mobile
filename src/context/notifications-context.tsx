@@ -30,12 +30,12 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-  // ✅ inicialize o useRef com null e permita null no tipo
+
   const notificationListener = useRef<Notifications.Subscription | null>(null);
   const responseListener = useRef<Notifications.Subscription | null>(null);
 
   useEffect(() => {
-    // Registrar permissões / token
+
     registerForPushNotificationsAsync().then((token) => {
       if (token) {
         setExpoPushToken(token);
@@ -43,15 +43,15 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       }
     });
 
-    // Escutar notificações recebidas
+
     const sub1 = Notifications.addNotificationReceivedListener((n) => {
-      console.log("[v0] Notification received:", n);
+      console.log("Notification received:", n);
       setNotification(n);
     });
 
-    // Escutar respostas do usuário (tap)
+
     const sub2 = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log("[v0] Notification response:", response);
+      console.log(" Notification response:", response);
       const data = response.notification.request.content.data as { motorcycleId?: string };
 
       if (data?.motorcycleId) {
@@ -62,11 +62,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       }
     });
 
-    // guardar refs (opcional, caso queira acessar depois)
+
     notificationListener.current = sub1;
     responseListener.current = sub2;
 
-    // ✅ limpar corretamente com .remove()
+
     return () => {
       sub1.remove();
       sub2.remove();
@@ -84,8 +84,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const disableNotifications = async () => {
     setNotificationsEnabled(false);
     await Notifications.cancelAllScheduledNotificationsAsync();
-    // (opcional) limpar badges/pendentes
-    // await Notifications.dismissAllNotificationsAsync();
+
   };
 
   return (

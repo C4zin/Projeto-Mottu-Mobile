@@ -1,360 +1,266 @@
-# 🏍️ Moto Manager (MotoTrack)
+### MotoTrack
 
-<div align="center">
+## 👨‍💻 Autores
 
-![React Native](https://img.shields.io/badge/React%20Native-0.81.4-blue?style=for-the-badge&logo=react)
-![Expo](https://img.shields.io/badge/Expo-54.0.11-black?style=for-the-badge&logo=expo)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-blue?style=for-the-badge&logo=typescript)
-![Firebase](https://img.shields.io/badge/Firebase-12.2.0-orange?style=for-the-badge&logo=firebase)
+RM558317 - Cauã Sanches de Santana -  
+Git: C4zin
 
-**Um aplicativo mobile moderno para gerenciamento de motos em pátios**
+RM556511 - Angello Turano da Costa -
+Git: AngelloTDC
 
-[Características](#-características) • [Instalação](#-instalação) • [Tecnologias](#-tecnologias) • [Estrutura](#-estrutura-do-projeto) • [Autores](#-autores)
 
-</div>
+RM558576 - Leonardo Bianchi -  
+Git: leonardobianchii
 
----
+## Descrição
+
+O Moto Manager é um aplicativo móvel desenvolvido com React Native e Expo para gerenciamento de motocicletas no pátio. Ele permite o cadastro, visualização, atualização de status e localização de motos em um mapa de pátio virtual.
+
+
+# 🏍️ Moto Manager
+
+Um aplicativo mobile moderno e elegante para gerenciamento de motocicletas em pátios, desenvolvido com **React Native**, **Expo** e **Firebase**.
+
+![Moto Manager](https://img.shields.io/badge/React%20Native-0.72.6-blue?style=for-the-badge&logo=react)
+![Firebase](https://img.shields.io/badge/Firebase-10.7.1-orange?style=for-the-badge&logo=firebase)
+![Expo](https://img.shields.io/badge/Expo-49.0.15-black?style=for-the-badge&logo=expo)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.1.3-blue?style=for-the-badge&logo=typescript)
 
 ## 📱 Sobre o Projeto
 
-O **Moto Manager** é uma solução completa para empresa mottu que precisa gerenciar frotas de motocicletas. Com uma interface moderna e intuitiva, o aplicativo permite controlar o status, localização e informações detalhadas de cada veículo em tempo real.
+O **Moto Manager** é uma solução completa para empresas que precisam gerenciar frotas de motocicletas. Com uma interface moderna e intuitiva, o aplicativo permite controlar o status, localização e informações detalhadas de cada veículo em tempo real.
 
-> **Observação:** Use o aplicativo em modo escuro para melhor experiência visual.
+### ✨ Principais Características
 
----
+- 🔐 **Autenticação Segura** com Firebase Authentication
+- 🎨 **Design Moderno** com paleta azul profissional
+- 🌙 **Tema Escuro/Claro** com persistência de preferências
+- 📱 **Interface Responsiva** otimizada para diferentes tamanhos de tela
+- 💾 **Armazenamento Local** com AsyncStorage
+- 🗺️ **Mapa Visual** do pátio com localização em tempo real
 
-## ✨ Características
+## 🚀 Funcionalidades
 
-### 🔐 Sistema de Autenticação
-- **Login Seguro** com Firebase Authentication
-- **Registro de Usuários** com validação de email e senha
-- **Persistência de Sessão** - Login automático
-- **Logout Seguro** - Encerramento protegido da sessão
-- **Mensagens de Erro** em português para melhor UX
+### 🔑 Sistema de Autenticação
+- **Login Seguro**: Autenticação via email e senha
+- **Registro de Usuários**: Criação de contas com validação
+- **Persistência de Sessão**: Login automático
+- **Logout Seguro**: Encerramento de sessão protegido
 
 ### 🏠 Dashboard Principal
-- **Estatísticas em Tempo Real**
-  - Total de motocicletas cadastradas
-  - Motos disponíveis
-  - Motos em manutenção
-- **Últimas Atividades** - Histórico de acessos com timestamp
-- **Navegação Rápida** - Acesso direto às principais funcionalidades
-- **Cards Informativos** - Visualização clara e organizada dos dados
-- **Pull-to-Refresh** - Atualização manual dos dados
-- **Integração IoT** - Link direto para sistema externo de monitoramento
+- **Estatísticas em Tempo Real**: Total de motos, disponíveis, em manutenção
+- **Últimas Atividades**: Histórico de acessos
+- **Navegação Rápida**: Acesso direto às principais funcionalidades
+- **Cards Informativos**: Visualização clara dos dados
 
 ### 🏍️ Gerenciamento de Motocicletas
 
 #### Cadastro Completo
-- **Informações Básicas**
-  - Modelo (seleção de modelos pré-cadastrados)
-  - Filial (seleção de filiais pré-cadastradas)
-  - Placa (validação de formato)
-  - Ano de fabricação
-  - Cor do veículo
-  - Quilometragem atual
-- **Status Dinâmico**
-  - 🟢 Disponível - Moto pronta para uso
-  - 🔵 Em Uso - Moto sendo utilizada
-  - 🔴 Manutenção - Moto em reparo
-  - 🟡 Reservada - Moto reservada para uso futuro
+- **Informações Básicas**: Modelo, placa, ano, cor
+- **Status Dinâmico**: Disponível, Em Uso, Manutenção, Reservada
+- **Posicionamento**: Localização no pátio (fileira e vaga)
+- **Observações**: Campo livre para anotações
+- **Pré-visualização**: Confirmação antes do cadastro
 
 #### Controle de Status
-- **Alteração Rápida** - Mudança de status com um toque
-- **Histórico Automático** - Registro de todas as alterações
-- **Notificações** - Alertas automáticos em mudanças de status
-- **Validações** - Prevenção de conflitos e dados inválidos
+- **Alteração Rápida**: Mudança de status com um toque
+- **Histórico**: Registro de todas as alterações
+- **Validações**: Prevenção de conflitos de status
 
-#### Visualização e Busca
-- **Lista Completa** - Todas as motos cadastradas
-- **Filtros por Status** - Visualização rápida por categoria
-- **Detalhes Completos** - Informações técnicas e operacionais
-- **Navegação Intuitiva** - Acesso rápido aos detalhes
+### 🗺️ Mapa do Pátio
+
+#### Visualização Interativa
+- **Grid Visual**: Representação clara das vagas (A1-E10)
+- **Código de Cores**: Status visual imediato
+- **Seleção de Vagas**: Toque para ver detalhes
+- **Legenda Completa**: Explicação de todos os status
+
+#### Informações Detalhadas
+- **Detalhes da Vaga**: Informações completas ao selecionar
+- **Navegação Direta**: Acesso rápido aos detalhes da moto
+- **Status em Tempo Real**: Atualização automática
 
 ### 📋 Detalhes da Motocicleta
 
 #### Informações Completas
-- **Dados Técnicos** - Modelo, placa, ano, cor
-- **Dados Operacionais** - Status atual, quilometragem
-- **Localização** - Filial e posição exata no pátio
-- **Histórico** - Data de cadastro e última atualização
-- **Observações** - Notas e comentários importantes
+- **Dados Técnicos**: Modelo, placa, ano, cor
+- **Localização**: Posição exata no pátio
+- **Data de Cadastro**: Histórico de registro
+- **Observações**: Notas e comentários
 
 #### Ações Disponíveis
-- **Alteração de Status** - Mudança rápida entre estados
-- **Edição** - Modificação de informações cadastrais
-- **Exclusão** - Remoção com confirmação de segurança
-- **Compartilhamento** - Exportação de informações
-
-### 🔔 Sistema de Notificações
-
-#### Notificações Inteligentes
-- **Nova Motocicleta** - Alerta ao cadastrar nova moto
-- **Mudança de Status** - Notificação em alterações de status
-- **Manutenção Preventiva** - Alerta quando faltam ≤500km para manutenção
-  - Baseado em intervalos de 5.000km
-  - Cálculo automático pela quilometragem
-- **Resumo Diário** - Estatísticas enviadas às 9h da manhã
-- **Navegação Direta** - Toque na notificação abre detalhes da moto
-
-#### Controles
-- **Ativar/Desativar** - Controle total sobre notificações
-- **Permissões** - Solicitação adequada de permissões do sistema
-- **Canais Android** - Configuração otimizada para Android
-- **Sons e Vibrações** - Feedback tátil e sonoro
-
-### 🌍 Multi-idioma
-- **Português (PT-BR)** - Idioma padrão
-- **Espanhol (ES)** - Suporte completo
-- **Persistência** - Preferência salva automaticamente
-- **Troca Instantânea** - Mudança sem reiniciar o app
-
-### 🎨 Temas Personalizáveis
-- **Modo Claro** - Interface clara e profissional
-- **Modo Escuro** - Redução de fadiga visual (recomendado)
-- **Persistência** - Tema salvo automaticamente
-- **Transições Suaves** - Mudança fluida entre temas
+- **Alteração de Status**: Mudança rápida entre estados
+- **Edição**: Modificação de informações
+- **Exclusão**: Remoção com confirmação
+- **Histórico**: Visualização de alterações
 
 ### ⚙️ Configurações
 
 #### Personalização
-- **Tema** - Alternância entre claro e escuro
-- **Idioma** - Seleção entre português e espanhol
-- **Notificações** - Controle de alertas e lembretes
+- **Tema**: Alternância entre claro e escuro
+- **Preferências**: Salvamento automático das configurações
 
 #### Informações do Sistema
-- **Versão do App** - Controle de versioning (v1.0.0)
-- **Estatísticas** - Dados de uso e performance
-- **Último Acesso** - Histórico de utilização
+- **Versão do App**: Controle de versioning
+- **Estatísticas**: Dados de uso
+- **Último Acesso**: Histórico de utilização
 
 #### Gerenciamento de Dados
-- **Armazenamento Local** - Dados salvos no dispositivo
-- **Limpeza de Dados** - Remoção com confirmação
-- **Backup Automático** - Persistência em AsyncStorage
-- **Logout Seguro** - Encerramento com limpeza de sessão
-
-### 🔗 Integração IoT
-- **Sistema Externo** - Link para dashboard Streamlit
-- **Monitoramento em Tempo Real** - Dados de sensores e dispositivos
-- **Abertura Automática** - Deep linking para navegador
-
----
+- **Backup Local**: Armazenamento seguro
+- **Limpeza de Dados**: Remoção com confirmação
+- **Logout**: Encerramento seguro da sessão
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Frontend
-- **React Native** 0.81.4 - Framework principal
-- **Expo** 54.0.11 - Plataforma de desenvolvimento
-- **Expo Router** - Sistema de navegação baseado em arquivos
-- **TypeScript** 5.7.2 - Tipagem estática e segurança
+- **React Native** 0.72.6 - Framework principal
+- **Expo** 49.0.15 - Plataforma de desenvolvimento
+- **TypeScript** 5.1.3 - Tipagem estática
+- **React Navigation** 6.1.9 - Navegação entre telas
 
 ### Backend & Autenticação
-- **Firebase Authentication** - Sistema de login seguro
-- **Firebase SDK** 12.2.0 - Integração com serviços Google
+- **Firebase Authentication** - Sistema de login
+- **Firebase SDK** 10.7.1 - Integração com serviços
 
-### Armazenamento & Estado
+### Armazenamento
 - **AsyncStorage** - Persistência local de dados
 - **Context API** - Gerenciamento de estado global
-  - AuthContext - Autenticação
-  - MotorcycleContext - Dados das motos
-  - ThemeContext - Tema do app
-  - LanguageContext - Idioma
-  - NotificationContext - Notificações
-
-### Notificações
-- **Expo Notifications** - Sistema de push notifications
-- **Notificações Locais** - Alertas sem servidor
-- **Notificações Agendadas** - Lembretes programados
 
 ### UI/UX
-- **Expo Vector Icons** - Biblioteca de ícones (Ionicons)
+- **Expo Vector Icons** - Ícones modernos
 - **React Native Picker** - Seletores customizados
-- **Gradientes** - Efeitos visuais modernos
-- **Animações** - Transições suaves
-
----
+- **Gradientes CSS** - Efeitos visuais
 
 ## 📦 Instalação
 
 ### Pré-requisitos
-- **Node.js** 16+ 
-- **npm** ou **yarn**
-- **Expo CLI** (`npm install -g expo-cli`)
-- **Expo Go** (app mobile para testes)
+- Node.js 16+ 
+- npm ou yarn
+- Expo CLI
+- Conta no Firebase
 
 ### Passo a Passo
 
 1. **Clone o repositório**
-
+\`\`\`
 git clone https://github.com/felipecvo-fiap-mad/2tdspw-sprint-01-mototrack
 
 cd 2tdspw-sprint-01-mototrack
+\`\`\`
 
-
-2. **Instale as dependências**
-
+3. **Instale as dependências**
+\`\`\`
 npm install
-# ou
-yarn install
+\`\`\`
 
 
-3. **Execute o projeto**
-
+4. **Execute o projeto**
+\`\`\`
 npx expo start
-
-
-5. **Teste no dispositivo**
-   - Escaneie o QR Code com o app **Expo Go** (Android/iOS)
-   - Ou pressione `a` para Android Emulator
-   - Ou pressione `i` para iOS Simulator
-
----
-
-## 📁 Estrutura do Projeto
-
-<img width="255" height="668" alt="image" src="https://github.com/user-attachments/assets/e9263991-4ab2-455c-abae-6972cb4bc141" />
-
-
----
+\`\`\`
 
 ## 🎨 Design
 
-### Paleta de Cores de Acordo com a Mottu
-
-#### Tema Claro
-- **Primária**: `#10B981` (Verde Esmeralda)
-- **Secundária**: `#065F46` (Verde Escuro)
-- **Fundo**: `#F1F5F9` (Cinza Claro)
-- **Cards**: `#FFFFFF` (Branco)
-- **Texto**: `#065F46` (Verde Escuro)
-
-#### Tema Escuro
-- **Primária**: `#10B981` (Verde Esmeralda)
-- **Secundária**: `#065F46` (Verde Escuro)
-- **Fundo**: `#0F172A` (Azul Escuro)
-- **Cards**: `#1E293B` (Cinza Escuro)
-- **Texto**: `#FFFFFF` (Branco)
-
-#### Status
-- **Disponível**: `#10B981` (Verde)
-- **Em Uso**: `#059669` (Verde Escuro)
-- **Manutenção**: `#DC2626` (Vermelho)
-- **Reservada**: `#F59E0B` (Amarelo)
+### Paleta de Cores
+- **Primária**: \`#3B82F6\` (Azul)
+- **Secundária**: \`#1E3A8A\` (Azul Escuro)
+- **Sucesso**: \`#10B981\` (Verde)
+- **Erro**: \`#EF4444\` (Vermelho)
+- **Aviso**: \`#F59E0B\` (Amarelo)
 
 ### Tipografia
 - **iOS**: San Francisco (System)
 - **Android**: Roboto
 - **Pesos**: 400 (Regular), 600 (Semibold), 700 (Bold), 800 (Extrabold)
 
----
+### Componentes
+- **Cards**: Bordas arredondadas (16-24px)
+- **Botões**: Altura 56px, bordas 16px
+- **Inputs**: Altura 56px, bordas 16px
+- **Sombras**: Elevação sutil com cores da marca
+
+## 📊 Status das Motocicletas
+
+| Status | Cor | Descrição |
+|--------|-----|-----------|
+| 🟢 Disponível | Verde | Moto pronta para uso |
+| 🔵 Em Uso | Azul | Moto sendo utilizada |
+| 🔴 Manutenção | Vermelho | Moto em reparo |
+| 🟡 Reservada | Amarelo | Moto reservada |
+
+## 🗺️ Layout do Pátio
+
+O pátio é organizado em uma grade de **5 fileiras (A-E)** por **10 vagas (1-10)**:
+
+\`\`\`
+    1  2  3  4  5  6  7  8  9  10
+A  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+B  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+C  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+D  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+E  [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+\`\`\`
+
+Total: **50 vagas** disponíveis
 
 ## 🔒 Segurança
 
 ### Autenticação
-- **Firebase Auth** - Autenticação segura na nuvem
-- **Validação de Email** - Verificação de formato
-- **Senhas Seguras** - Mínimo 6 caracteres (Firebase)
-- **Sessões Persistentes** - Login automático seguro
-- **Logout Protegido** - Limpeza completa de dados
+- **Firebase Auth**: Autenticação segura na nuvem
+- **Validação de Email**: Verificação de formato
+- **Senhas Seguras**: Mínimo 6 caracteres
+- **Sessões Persistentes**: Login automático seguro
 
 ### Dados
-- **Armazenamento Local** - AsyncStorage criptografado
-- **Validação de Entrada** - Sanitização de dados
-- **Tratamento de Erros** - Mensagens em português
-- **Sem Dados Sensíveis** - Nenhuma informação crítica armazenada
-
-### Permissões
-- **Notificações** - Solicitação adequada de permissões
-- **Mínimo Necessário** - Apenas permissões essenciais
-
----
+- **Armazenamento Local**: AsyncStorage criptografado
+- **Validação de Entrada**: Sanitização de dados
+- **Tratamento de Erros**: Mensagens em português
 
 ## 📈 Performance
 
 ### Otimizações
-- **Lazy Loading** - Carregamento sob demanda
-- **Context Optimization** - Estado global eficiente
-- **Image Optimization** - Ícones vetoriais
-- **Memory Management** - Limpeza automática de recursos
-- **AsyncStorage** - Persistência rápida e eficiente
+- **Lazy Loading**: Carregamento sob demanda
+- **Context Optimization**: Estado global eficiente
+- **Image Optimization**: Ícones vetoriais
+- **Memory Management**: Limpeza automática
 
 ### Métricas
 - **Tempo de Inicialização**: < 2 segundos
-- **Navegação**: Transições fluidas (60 FPS)
+- **Navegação**: Transições fluidas
 - **Responsividade**: Suporte a múltiplas resoluções
 
----
+## 🧪 Testes
 
-## 🧪 Funcionalidades Testadas
-
-### Autenticação
-- ✅ Login com email/senha
-- ✅ Registro de novos usuários
-- ✅ Persistência de sessão
-- ✅ Logout seguro
-- ✅ Tratamento de erros
-
-### CRUD de Motocicletas
-- ✅ Cadastro completo
-- ✅ Listagem com busca e filtros
-- ✅ Visualização de detalhes
-- ✅ Edição de informações
-- ✅ Exclusão com confirmação
-- ✅ Alteração de status
-
-### Notificações
-- ✅ Nova motocicleta
-- ✅ Mudança de status
-- ✅ Manutenção preventiva
-- ✅ Resumo diário
-- ✅ Navegação por tap
-
-### Interface
-- ✅ Tema claro/escuro
-- ✅ Multi-idioma (PT/ES)
+### Funcionalidades Testadas
+- ✅ Autenticação (Login/Registro)
+- ✅ CRUD de Motocicletas
 - ✅ Navegação entre telas
-- ✅ Pull-to-refresh
+- ✅ Persistência de dados
+- ✅ Temas claro/escuro
 - ✅ Responsividade
 
 ### Dispositivos Testados
 - 📱 iPhone (iOS 14+)
 - 📱 Android (API 21+)
-- 📱 Diferentes resoluções e tamanhos
+- 📱 Diferentes resoluções
 
----
+## 📝 Roadmap
 
-## 👨‍💻 Autores
+### Versão 2.0
+- [ ] 📊 Dashboard com gráficos
+- [ ] 📱 Notificações push
+- [ ] 🔍 Busca avançada
+- [ ] 📄 Relatórios em PDF
+- [ ] 🌐 Sincronização em nuvem
 
-<table>
-  <tr>
-    <td align="center">
-      <strong>Cauã Sanches de Santana</strong><br>
-      RM558317<br>
-      <a href="https://github.com/C4zin">@C4zin</a>
-    </td>
-    <td align="center">
-      <strong>Angello Turano da Costa</strong><br>
-      RM556511<br>
-      <a href="https://github.com/AngelloTDC">@AngelloTDC</a>
-    </td>
-    <td align="center">
-      <strong>Leonardo Bianchi</strong><br>
-      RM558576<br>
-      <a href="https://github.com/leonardobianchii">@leonardobianchii</a>
-    </td>
-  </tr>
-</table>
+### Versão 2.1
+- [ ] 📷 Scanner de QR Code
+- [ ] 🗓️ Agendamento de manutenção
+- [ ] 👥 Múltiplos usuários
+- [ ] 📈 Analytics avançado
 
----
+<div align="center">
 
-## 📄 Licença
+**⭐ espero que tenha gostado do projeto! ⭐**
 
-Este projeto foi desenvolvido como parte do curso de **Análise e Desenvolvimento de Sistemas** da **FIAP**.
-
----
-
-## 🙏 Agradecimentos
-
-- **FIAP** - Pela oportunidade de aprendizado
-
----
+</div>

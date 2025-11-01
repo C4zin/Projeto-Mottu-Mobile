@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native"
-import axios from "axios"
 import { useMutation } from "@tanstack/react-query"
 import { router } from "expo-router"
 import { useLanguage } from "../../src/context/language-context"
 import { useTheme } from "../../src/context/theme-context"
+import { api } from "../../src/config/api" // 👈 importa sua instância configurada
 
 type Moto = {
   id: number
@@ -17,10 +17,9 @@ type Moto = {
   kmRodado: number
 }
 
+// 👇 Usa o `api` ao invés do `axios` direto
 async function cadastrarMoto(moto: Moto) {
-  const response = await axios.post("https://apirest-java-tomobile.onrender.com/api/motos", moto, {
-    headers: { "Content-Type": "application/json" },
-  })
+  const response = await api.post("/api/motos", moto)
   return response.data
 }
 
@@ -38,7 +37,11 @@ export default function CadastroMoto() {
   const mutation = useMutation({
     mutationFn: cadastrarMoto,
     onSuccess: (data) => {
-      Alert.alert(t.motorcycleRegister.success, `${t.motorcycleRegister.motorcycleAddedWithId} ${data.id}`)
+      Alert.alert(
+        t.motorcycleRegister.success,
+        `${t.motorcycleRegister.motorcycleAddedWithId} ${data.id}`
+      )
+      // limpa os campos
       setId("")
       setIdModelo("")
       setIdFilial("")
@@ -50,7 +53,7 @@ export default function CadastroMoto() {
       console.error(error)
       Alert.alert(
         t.motorcycleRegister.errors.registerError,
-        error.response?.data?.message || t.motorcycleRegister.errors.tryAgainLater,
+        error.response?.data?.message || t.motorcycleRegister.errors.tryAgainLater
       )
     },
   })
@@ -142,7 +145,9 @@ export default function CadastroMoto() {
           disabled={mutation.isPending}
         >
           <Text style={styles.buttonText}>
-            {mutation.isPending ? t.motorcycleRegister.registering : t.motorcycleRegister.registerButton}
+            {mutation.isPending
+              ? t.motorcycleRegister.registering
+              : t.motorcycleRegister.registerButton}
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58537955068",
+    "project_id": "moto-manager-3f7f4",
+    "storage_bucket": "moto-manager-3f7f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58537955068:android:c48ee473de1581bf581179",
+        "android_client_info": {
+          "package_name": "com.c4zin.motomanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpiTwGIJ2a5zHaWwFc5gTXIO15yIkl5Pw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,18 +2,18 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// ✅ Configuração global do comportamento das notificações
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
-    shouldShowBanner: true, // novos campos obrigatórios no SDK 54+
+    shouldShowBanner: true, 
     shouldShowList: true,
   }),
 });
 
-// Tipagem do conteúdo de dados extra
+
 export interface NotificationData {
   type: "maintenance" | "new_motorcycle" | "status_change" | "reminder";
   motorcycleId?: string;
@@ -21,7 +21,6 @@ export interface NotificationData {
   body: string;
 }
 
-// ✅ Registro de permissões e obtenção do token do dispositivo
 export async function registerForPushNotificationsAsync(): Promise<string | null> {
   let token: string | undefined;
 
@@ -58,14 +57,13 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
   return token ?? null;
 }
 
-// ✅ Notificação de manutenção (quando falta <= 500 km)
 export async function scheduleMaintenanceReminder(
   motorcycleId: string,
   modelName: string,
   plate: string,
   mileage: number
 ): Promise<boolean> {
-  const maintenanceThreshold = 5000; // km
+  const maintenanceThreshold = 5000; 
   const remainingKm = maintenanceThreshold - (mileage % maintenanceThreshold);
 
   if (remainingKm <= 500) {
@@ -89,7 +87,7 @@ export async function scheduleMaintenanceReminder(
   return false;
 }
 
-// ✅ Notificação quando uma nova moto é cadastrada
+
 export async function notifyNewMotorcycle(
   modelName: string,
   plate: string,
@@ -111,7 +109,7 @@ export async function notifyNewMotorcycle(
   });
 }
 
-// ✅ Notificação quando o status de uma moto muda
+
 export async function notifyStatusChange(
   modelName: string,
   plate: string,
@@ -142,7 +140,7 @@ export async function notifyStatusChange(
   });
 }
 
-// ✅ Resumo diário (9h da manhã)
+
 export async function scheduleDailySummary(
   totalMotorcycles: number,
   availableCount: number,
@@ -164,12 +162,12 @@ export async function scheduleDailySummary(
   });
 }
 
-// ✅ Cancelar todas as notificações agendadas
+
 export async function cancelAllNotifications(): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
 }
 
-// ✅ Listar todas as notificações agendadas
+
 export async function getAllScheduledNotifications() {
   return await Notifications.getAllScheduledNotificationsAsync();
 }
